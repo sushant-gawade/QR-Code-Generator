@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code Generator</title>
+</head>
+<body>
+    <h2>Link to QR Code Generator</h2>
+    <input type="text" id="link" placeholder="Enter your link here" />
+    <button onclick="generateQR()">Generate QR Code</button>
+    <button id="downloadBtn" style="display: none;" onclick="downloadQR()">Download QR Code</button>
+    <div id="qrcode"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script>
+        let generatedCanvas;
+
+        function generateQR() {
+            const link = document.getElementById('link').value;
+            const qrcodeDiv = document.getElementById('qrcode');
+            qrcodeDiv.innerHTML = ""; // Clear previous QR
+            document.getElementById('downloadBtn').style.display = 'none'; // Hide download button
+
+            QRCode.toCanvas(link, function (error, canvas) {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                generatedCanvas = canvas;
+                qrcodeDiv.appendChild(canvas);
+                document.getElementById('downloadBtn').style.display = 'inline-block'; // Show download button
+            });
+        }
+
+        function downloadQR() {
+            const link = document.createElement('a');
+            link.download = 'qrcode.png';
+            link.href = generatedCanvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>
